@@ -141,3 +141,5 @@ export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:$(go env GOPATH)/bin
 cd ~
 
+# Python venv
+source ~/venv/bin/activate
