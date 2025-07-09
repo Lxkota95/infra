@@ -143,3 +143,7 @@ cd ~
 
 # Python venv
 source ~/venv/bin/activate
+
+# Flyctl setup
+export FLYCTL_INSTALL="/home/lxkota/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
