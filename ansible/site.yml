@@ -1,0 +1,10 @@
+---
+# Usage (from this directory):  ansible-playbook site.yml -K
+# -K prompts for the sudo password; tasks that need root set `become: true`.
+- name: Configure workstation
+  hosts: workstation
+  vars:
+    repo_dir: "{{ playbook_dir | dirname }}"
+  roles:
+    - base
+    - dotfiles
