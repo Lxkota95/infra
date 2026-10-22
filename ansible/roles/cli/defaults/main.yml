@@ -1,0 +1,20 @@
+---
+cli_packages:
+  - bat
+  - direnv
+  - eza
+  - fd-find
+  - fzf
+  - ghostty
+  - jq
+  - ripgrep
+  - tmux
+  - zoxide
+
+# Ubuntu renames these binaries to avoid package conflicts; expose the upstream names
+cli_renamed_binaries:
+  fd: /usr/bin/fdfind
+  bat: /usr/bin/batcat
+
+nerd_font_version: v3.4.0
+nerd_font_name: JetBrainsMono

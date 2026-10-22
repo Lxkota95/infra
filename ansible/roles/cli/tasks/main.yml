@@ -1,0 +1,35 @@
+---
+- name: Install CLI tools and terminal
+  become: true
+  ansible.builtin.apt:
+    name: "{{ cli_packages }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Create ~/.local/bin
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.local/bin"
+    state: directory
+    mode: "0755"
+
+- name: Link renamed binaries to their upstream names
+  ansible.builtin.file:
+    src: "{{ item.value }}"
+    dest: "{{ ansible_env.HOME }}/.local/bin/{{ item.key }}"
+    state: link
+  loop: "{{ cli_renamed_binaries | dict2items }}"
+
+- name: Create Nerd Font directory
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.local/share/fonts/{{ nerd_font_name }}NerdFont"
+    state: directory
+    mode: "0755"
+
+- name: Install {{ nerd_font_name }} Nerd Font {{ nerd_font_version }}
+  ansible.builtin.unarchive:
+    src: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{ nerd_font_version }}/{{ nerd_font_name }}.tar.xz"
+    dest: "{{ ansible_env.HOME }}/.local/share/fonts/{{ nerd_font_name }}NerdFont"
+    remote_src: true
+    creates: "{{ ansible_env.HOME }}/.local/share/fonts/{{ nerd_font_name }}NerdFont/{{ nerd_font_name }}NerdFont-Regular.ttf"
+  notify: Refresh font cache

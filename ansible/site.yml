@@ -7,4 +7,5 @@
     repo_dir: "{{ playbook_dir | dirname }}"
   roles:
     - base
+    - cli
     - dotfiles
