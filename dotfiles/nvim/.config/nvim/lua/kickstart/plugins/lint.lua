@@ -3,9 +3,10 @@
 vim.pack.add { 'https://github.com/mfussenegger/nvim-lint' }
 
 local lint = require 'lint'
-lint.linters_by_ft = {
-  markdown = { 'markdownlint' }, -- Make sure to install `markdownlint` via mason / npm
-}
+lint.linters_by_ft = {}
+-- Only enable markdownlint once it's installed (needs npm; comes with phase 6 toolchains),
+-- otherwise every Markdown buffer shows a "linter not found" error.
+if vim.fn.executable 'markdownlint' == 1 then lint.linters_by_ft.markdown = { 'markdownlint' } end
 
 -- To allow other plugins to add linters to require('lint').linters_by_ft,
 -- instead set linters_by_ft like this:
