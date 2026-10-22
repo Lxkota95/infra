@@ -1,0 +1,9 @@
+[user]
+	name = Lxkota
+	email = 20358943+Lxkota95@users.noreply.github.com
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true

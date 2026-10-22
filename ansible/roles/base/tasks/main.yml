@@ -1,0 +1,14 @@
+---
+- name: Install base packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ansible
+      - curl
+      - gh
+      - git
+      - stow
+      - tree
+    state: present
+    update_cache: true
+    cache_valid_time: 3600

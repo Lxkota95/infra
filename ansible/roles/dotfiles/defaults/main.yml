@@ -1,0 +1,10 @@
+---
+# Stow packages under dotfiles/ to link into $HOME
+dotfiles_packages:
+  - bash
+  - git
+
+# Files a fresh install creates that would block stow; moved to <file>.pre-stow
+dotfiles_conflicts:
+  - .bashrc
+  - .gitconfig
