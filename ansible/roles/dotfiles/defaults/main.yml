@@ -4,6 +4,7 @@ dotfiles_packages:
   - bash
   - ghostty
   - git
+  - nvim
   - session
   - tmux
 
