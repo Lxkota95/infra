@@ -1,0 +1,13 @@
+---
+# GitHub repos (owner Lxkota95) cloned to ~/repos/<name>. Existing clones are never updated.
+# Not listed: lxkota (cloned by bootstrap.sh), archived repos, and covid_19 / dsa / learning_rust
+# (kept on GitHub, not needed locally yet).
+repos_owner: Lxkota95
+repos_dir: "{{ ansible_env.HOME }}/repos"
+repos_clone:
+  - ansible
+  - creamer
+  - discord_bot
+  - infra
+  - odst
+  - website
