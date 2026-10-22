@@ -1,0 +1,14 @@
+---
+# Build tools for treesitter parsers and telescope-fzf-native; Wayland clipboard provider
+editor_packages:
+  - build-essential
+  - wl-clipboard
+
+# Neovim from upstream: kickstart.nvim uses vim.pack (Neovim >= 0.12); apt has 0.11.
+# Upstream publishes no checksums; sha256 is of the GitHub release asset as downloaded.
+neovim_version: v0.12.6
+neovim_sha256: 474430d53e6264f6d6dd18db42d6dc9df3a1b56ca9e88a325bbf860e1a811d87
+
+# tree-sitter CLI for nvim-treesitter (needs >= 0.26.1; apt has 0.25)
+tree_sitter_version: v0.27.1
+tree_sitter_sha256: c7e686aec16ba17053c2e6fd87600ccb10cf8ba3d055756b17e756d538e11114
