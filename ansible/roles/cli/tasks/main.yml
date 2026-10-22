@@ -33,3 +33,11 @@
     remote_src: true
     creates: "{{ ansible_env.HOME }}/.local/share/fonts/{{ nerd_font_name }}NerdFont/{{ nerd_font_name }}NerdFont-Regular.ttf"
   notify: Refresh font cache
+
+- name: Install herdr {{ herdr_version }}
+  ansible.builtin.get_url:
+    url: "https://github.com/ogulcancelik/herdr/releases/download/{{ herdr_version }}/herdr-linux-x86_64"
+    dest: "{{ ansible_env.HOME }}/.local/bin/herdr"
+    checksum: "sha256:{{ herdr_sha256 }}"
+    mode: "0755"
+  tags: herdr

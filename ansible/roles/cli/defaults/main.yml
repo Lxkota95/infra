@@ -18,3 +18,8 @@ cli_renamed_binaries:
 
 nerd_font_version: v3.4.0
 nerd_font_name: JetBrainsMono
+
+# herdr: terminal workspace manager for AI coding agents (static binary from GitHub releases).
+# To upgrade: bump the version and update the sha256 of herdr-linux-x86_64 from the release.
+herdr_version: v0.9.5
+herdr_sha256: 14d9e8bc8b4a9e0118d77c32266f76d461f09b40342eb23752960bd89f59929d
