@@ -74,6 +74,22 @@
     deb: "{{ ansible_env.HOME }}/.local/opt/downloads/Bitwarden-{{ bitwarden_version }}-amd64.deb"
   tags: bitwarden
 
+# Bitwarden must be running for git over SSH (it is the SSH agent). Same file Bitwarden writes for
+# Settings → "Start automatically on login"; a copy, not a stow link, since the app rewrites it.
+- name: Start Bitwarden at login
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}/.config/autostart/bitwarden.desktop"
+    mode: "0664"
+    content: |
+      [Desktop Entry]
+      Type=Application
+      Name=Bitwarden
+      Comment=Bitwarden startup script
+      Exec=/opt/Bitwarden/bitwarden-app --autostart
+      StartupNotify=false
+      Terminal=false
+  tags: [bitwarden, autostart]
+
 - name: Read default web browser
   ansible.builtin.command: xdg-settings get default-web-browser
   register: default_browser
