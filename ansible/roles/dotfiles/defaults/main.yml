@@ -5,6 +5,7 @@ dotfiles_packages:
   - containers
   - ghostty
   - git
+  - herdr
   - npm
   - nvim
   - session
