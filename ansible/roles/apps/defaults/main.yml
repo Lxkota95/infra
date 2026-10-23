@@ -13,6 +13,11 @@ apps_blocked_snap_wrappers:
 bitwarden_version: "2026.10.0"
 bitwarden_sha256: fcabfc7da3c327e2625b105e951cee4e60703bb8e256f0aac9cc9bc83ec7063f
 
+# Discord: official .deb (no apt repo). Discord prompts when a newer build exists; bump these to upgrade.
+# sha256 is of https://dl.discordapp.net/apps/linux/<version>/discord-<version>.deb as downloaded.
+discord_version: "1.0.166"
+discord_sha256: fde0bd83d718cd5b9cf949695fb461ae8004da2f3779c429b346dc0659d7de6e
+
 # Snaps replaced by the apt packages above. Removed only after their data is migrated:
 # on a machine that still has them, apply with --skip-tags remove-snaps first.
 apps_removed_snaps:
