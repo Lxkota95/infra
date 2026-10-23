@@ -734,15 +734,19 @@ do
   ---@type table<string, vim.lsp.Config>
   local servers = {
     -- clangd = {},
-    -- gopls = {},
-    -- pyright = {},
+    gopls = {}, -- Go
+    pyright = {}, -- Python: types, go-to-definition
+    ruff = {}, -- Python: lint + format
+    bashls = {}, -- Bash (uses shellcheck, installed below, for diagnostics)
+    yamlls = {}, -- YAML (Ansible playbooks, GitHub workflows)
+    taplo = {}, -- TOML (Cargo.toml, fly.toml)
     -- tsc = {},
     --
     -- Some languages (like rust) have entire language plugins that can be useful:
     --    https://github.com/mrcjkb/rustaceanvim
     --
     -- But for many setups, the LSP (`rust_analyzer`) will work just fine
-    -- rust_analyzer = {},
+    -- rust_analyzer: see `system_servers` below
 
     stylua = {}, -- Used to format Lua code
 
@@ -779,6 +783,14 @@ do
     },
   }
 
+  -- Servers that come from outside Mason, so Mason must not install its own copy.
+  -- rust-analyzer comes from rustup (`rustup component add rust-analyzer`), which keeps it in step
+  -- with the installed Rust toolchain.
+  ---@type table<string, vim.lsp.Config>
+  local system_servers = {
+    rust_analyzer = {},
+  }
+
   vim.pack.add {
     gh 'neovim/nvim-lspconfig',
     gh 'mason-org/mason.nvim',
@@ -804,11 +816,14 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
+    'goimports', -- Go formatter (gofmt + import fixing)
+    'shellcheck', -- Bash linter, used by bashls
+    'shfmt', -- Bash formatter
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-  for name, server in pairs(servers) do
+  for name, server in pairs(vim.tbl_extend('error', servers, system_servers)) do
     vim.lsp.config(name, server)
     vim.lsp.enable(name)
   end
@@ -825,9 +840,15 @@ do
     notify_on_error = false,
     format_on_save = function(bufnr)
       -- You can specify filetypes to autoformat on save here:
+      -- Only languages with a dedicated formatter (formatters_by_ft below, plus stylua for Lua);
+      -- YAML and TOML are left alone so saving doesn't restyle Ansible playbooks or config files.
       local enabled_filetypes = {
-        -- lua = true,
-        -- python = true,
+        bash = true,
+        go = true,
+        lua = true,
+        python = true,
+        rust = true,
+        sh = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
@@ -840,7 +861,11 @@ do
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
-      -- rust = { 'rustfmt' },
+      go = { 'goimports' },
+      python = { 'ruff_organize_imports', 'ruff_format' },
+      rust = { 'rustfmt' },
+      sh = { 'shfmt' },
+      bash = { 'shfmt' },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
       --
