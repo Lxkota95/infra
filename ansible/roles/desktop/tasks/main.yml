@@ -1,0 +1,11 @@
+---
+# Needs the user's D-Bus session: run the playbook from a terminal inside the desktop session
+- name: Apply GNOME settings
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+  loop: "{{ gnome_settings | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  tags: gnome
