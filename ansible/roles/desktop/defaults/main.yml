@@ -14,7 +14,7 @@ gnome_settings:
   /org/gnome/desktop/peripherals/keyboard/repeat-interval: "uint32 25"
 
   # Dock (Ubuntu Dock is dash-to-dock): pinned apps; hide when a window overlaps it
-  /org/gnome/shell/favorite-apps: "['firefox_firefox.desktop', 'com.mitchellh.ghostty.desktop', 'org.gnome.Nautilus.desktop', 'bitwarden_bitwarden.desktop']"
+  /org/gnome/shell/favorite-apps: "['firefox.desktop', 'com.mitchellh.ghostty.desktop', 'org.gnome.Nautilus.desktop', 'bitwarden.desktop']"
   /org/gnome/shell/extensions/dash-to-dock/dock-fixed: "false"
   /org/gnome/shell/extensions/dash-to-dock/autohide: "true"
   /org/gnome/shell/extensions/dash-to-dock/intellihide: "true"

@@ -10,6 +10,7 @@
     - cli
     - editor
     - toolchains
+    - apps
     - dotfiles
     - desktop
     - repos
