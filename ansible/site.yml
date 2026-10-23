@@ -9,5 +9,6 @@
     - base
     - cli
     - editor
+    - toolchains
     - dotfiles
     - repos
