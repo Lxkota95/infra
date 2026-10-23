@@ -90,6 +90,54 @@
       Terminal=false
   tags: [bitwarden, autostart]
 
+# Signal's apt repo: https://signal.org/download/linux/ (the "xenial" suite serves every Ubuntu)
+# Key fingerprint DBA36B5181D0C816F630E889D980A17457F6FB06
+- name: Install Signal's apt signing key
+  become: true
+  ansible.builtin.copy:
+    src: signal-desktop.asc
+    dest: /etc/apt/keyrings/signal-desktop.asc
+    mode: "0644"
+  tags: signal
+
+- name: Add Signal's apt repo
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/signal-desktop.sources
+    mode: "0644"
+    content: |
+      Types: deb
+      URIs: https://updates.signal.org/desktop/apt
+      Suites: xenial
+      Components: main
+      Architectures: amd64
+      Signed-By: /etc/apt/keyrings/signal-desktop.asc
+  register: signal_repo
+  tags: signal
+
+- name: Install Signal
+  become: true
+  ansible.builtin.apt:
+    name: signal-desktop
+    state: present
+    update_cache: true
+    cache_valid_time: "{{ 0 if signal_repo.changed else 3600 }}"
+  tags: signal
+
+- name: Download Discord {{ discord_version }}
+  ansible.builtin.get_url:
+    url: "https://dl.discordapp.net/apps/linux/{{ discord_version }}/discord-{{ discord_version }}.deb"
+    dest: "{{ ansible_env.HOME }}/.local/opt/downloads/discord-{{ discord_version }}.deb"
+    checksum: "sha256:{{ discord_sha256 }}"
+    mode: "0644"
+  tags: discord
+
+- name: Install Discord {{ discord_version }}
+  become: true
+  ansible.builtin.apt:
+    deb: "{{ ansible_env.HOME }}/.local/opt/downloads/discord-{{ discord_version }}.deb"
+  tags: discord
+
 - name: Read default web browser
   ansible.builtin.command: xdg-settings get default-web-browser
   register: default_browser
