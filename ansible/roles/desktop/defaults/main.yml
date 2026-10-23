@@ -1,0 +1,37 @@
+---
+# GNOME settings, written with dconf. Values are GVariant text (strings quoted, uint32 typed).
+# Find a key: change it in Settings, then `dconf watch /` (live) or `dconf dump /` (all non-defaults).
+gnome_settings:
+  # Appearance
+  /org/gnome/desktop/interface/color-scheme: "'prefer-dark'"
+  /org/gnome/desktop/interface/accent-color: "'orange'"
+  /org/gnome/desktop/interface/gtk-theme: "'Yaru-dark'"
+  /org/gnome/desktop/interface/icon-theme: "'Yaru-dark'"
+
+  # Keyboard: Caps Lock is Escape; shorter repeat delay and faster repeat (defaults 500 / 30 ms)
+  /org/gnome/desktop/input-sources/xkb-options: "['caps:escape']"
+  /org/gnome/desktop/peripherals/keyboard/delay: "uint32 250"
+  /org/gnome/desktop/peripherals/keyboard/repeat-interval: "uint32 25"
+
+  # Dock (Ubuntu Dock is dash-to-dock): pinned apps; hide when a window overlaps it
+  /org/gnome/shell/favorite-apps: "['firefox_firefox.desktop', 'com.mitchellh.ghostty.desktop', 'org.gnome.Nautilus.desktop', 'bitwarden_bitwarden.desktop']"
+  /org/gnome/shell/extensions/dash-to-dock/dock-fixed: "false"
+  /org/gnome/shell/extensions/dash-to-dock/autohide: "true"
+  /org/gnome/shell/extensions/dash-to-dock/intellihide: "true"
+
+  # No desktop icons (Home, Trash): disable the Desktop Icons NG extension
+  /org/gnome/shell/disabled-extensions: "['ding@rastersoft.com']"
+
+  # Power: never sleep on AC power
+  /org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-type: "'nothing'"
+  /org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-timeout: "3600"
+
+  # Night light uses a manual schedule rather than sunset/sunrise (location is off)
+  /org/gnome/settings-daemon/plugins/color/night-light-schedule-automatic: "false"
+
+  # Privacy
+  /org/gnome/system/location/enabled: "false"
+  /org/gnome/desktop/privacy/report-technical-problems: "false"
+
+  # File chooser: folders first
+  /org/gtk/gtk4/settings/file-chooser/sort-directories-first: "true"
