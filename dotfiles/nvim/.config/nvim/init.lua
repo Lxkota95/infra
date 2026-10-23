@@ -840,9 +840,15 @@ do
     notify_on_error = false,
     format_on_save = function(bufnr)
       -- You can specify filetypes to autoformat on save here:
+      -- Only languages with a dedicated formatter (formatters_by_ft below, plus stylua for Lua);
+      -- YAML and TOML are left alone so saving doesn't restyle Ansible playbooks or config files.
       local enabled_filetypes = {
-        -- lua = true,
-        -- python = true,
+        bash = true,
+        go = true,
+        lua = true,
+        python = true,
+        rust = true,
+        sh = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
