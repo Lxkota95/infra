@@ -1,0 +1,13 @@
+# herdr config — all options: https://herdr.dev/docs/configuration/
+# Validate after editing: herdr config check   Apply: herdr server reload-config
+onboarding = false
+
+# Prefix (ctrl+b) bindings stay; ctrl+alt chords add one-handed, prefix-free movement.
+# ctrl+alt is free in Ghostty and GNOME except arrows and ctrl+alt+t.
+[keys]
+previous_tab = ["prefix+p", "ctrl+alt+["]
+next_tab = ["prefix+n", "ctrl+alt+]"]
+previous_workspace = "ctrl+alt+,"
+next_workspace = "ctrl+alt+."
+# Back and forth: jump to the previously focused pane, across tabs and workspaces
+last_pane = "ctrl+alt+;"

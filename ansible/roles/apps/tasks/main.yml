@@ -1,0 +1,110 @@
+---
+- name: Block Ubuntu's snap wrapper packages
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/apt/preferences.d/no-snap-wrappers
+    mode: "0644"
+    content: |
+      # Ubuntu's {{ apps_blocked_snap_wrappers | join(', ') }} packages only install the snap.
+      # Refuse them from the Ubuntu archive; vendor repos (e.g. Mozilla's) still provide the real ones.
+      Package: {{ apps_blocked_snap_wrappers | join(' ') }}
+      Pin: release o=Ubuntu
+      Pin-Priority: -1
+
+# Mozilla's apt repo: https://support.mozilla.org/kb/install-firefox-linux
+# Key fingerprint 35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3
+- name: Install Mozilla's apt signing key
+  become: true
+  ansible.builtin.copy:
+    src: packages.mozilla.org.asc
+    dest: /etc/apt/keyrings/packages.mozilla.org.asc
+    mode: "0644"
+
+- name: Add Mozilla's apt repo
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/mozilla.sources
+    mode: "0644"
+    content: |
+      Types: deb
+      URIs: https://packages.mozilla.org/apt
+      Suites: mozilla
+      Components: main
+      Signed-By: /etc/apt/keyrings/packages.mozilla.org.asc
+  register: mozilla_repo
+
+# Priority 1000 also lets Mozilla's firefox replace Ubuntu's higher-versioned (epoch 1) wrapper
+- name: Prefer Mozilla's packages
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/apt/preferences.d/mozilla
+    mode: "0644"
+    content: |
+      Package: *
+      Pin: origin packages.mozilla.org
+      Pin-Priority: 1000
+
+- name: Read installed packages
+  ansible.builtin.package_facts:
+  tags: firefox
+
+# `present` would accept Ubuntu's wrapper (version "1:1snap1…") as installed, so replace it explicitly
+- name: Install Firefox from Mozilla
+  become: true
+  ansible.builtin.apt:
+    name: firefox
+    state: "{{ 'latest' if 'snap' in (ansible_facts.packages.firefox | default([{}]))[0].version | default('') else 'present' }}"
+    # Mozilla's 158.x sorts below the wrapper's epoch-1 version, so apt treats the switch as a downgrade
+    allow_downgrade: true
+    update_cache: true
+    cache_valid_time: "{{ 0 if mozilla_repo.changed else 3600 }}"
+  tags: firefox
+
+- name: Download Bitwarden {{ bitwarden_version }}
+  ansible.builtin.get_url:
+    url: "https://github.com/bitwarden/clients/releases/download/desktop-v{{ bitwarden_version }}/Bitwarden-{{ bitwarden_version }}-amd64.deb"
+    dest: "{{ ansible_env.HOME }}/.local/opt/downloads/Bitwarden-{{ bitwarden_version }}-amd64.deb"
+    checksum: "sha256:{{ bitwarden_sha256 }}"
+    mode: "0644"
+  tags: bitwarden
+
+- name: Install Bitwarden {{ bitwarden_version }}
+  become: true
+  ansible.builtin.apt:
+    deb: "{{ ansible_env.HOME }}/.local/opt/downloads/Bitwarden-{{ bitwarden_version }}-amd64.deb"
+  tags: bitwarden
+
+# Bitwarden must be running for git over SSH (it is the SSH agent). Same file Bitwarden writes for
+# Settings → "Start automatically on login"; a copy, not a stow link, since the app rewrites it.
+- name: Start Bitwarden at login
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}/.config/autostart/bitwarden.desktop"
+    mode: "0664"
+    content: |
+      [Desktop Entry]
+      Type=Application
+      Name=Bitwarden
+      Comment=Bitwarden startup script
+      Exec=/opt/Bitwarden/bitwarden-app --autostart
+      StartupNotify=false
+      Terminal=false
+  tags: [bitwarden, autostart]
+
+- name: Read default web browser
+  ansible.builtin.command: xdg-settings get default-web-browser
+  register: default_browser
+  changed_when: false
+  failed_when: false
+  tags: firefox
+
+- name: Set Firefox as default web browser
+  ansible.builtin.command: xdg-settings set default-web-browser firefox.desktop
+  when: default_browser.stdout != 'firefox.desktop'
+  tags: firefox
+
+- name: Remove snaps replaced by apt packages
+  become: true
+  community.general.snap:
+    name: "{{ apps_removed_snaps }}"
+    state: absent
+  tags: remove-snaps
