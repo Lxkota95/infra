@@ -40,14 +40,14 @@
 
 - name: Create ~/.local/opt/downloads
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/.local/opt/downloads"
+    path: "{{ home_dir }}/.local/opt/downloads"
     state: directory
     mode: "0755"
 
 - name: Download Go {{ go_version }}
   ansible.builtin.get_url:
     url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
-    dest: "{{ ansible_env.HOME }}/.local/opt/downloads/go{{ go_version }}.tar.gz"
+    dest: "{{ home_dir }}/.local/opt/downloads/go{{ go_version }}.tar.gz"
     checksum: "sha256:{{ go_sha256 }}"
     mode: "0644"
   tags: go
@@ -55,24 +55,24 @@
 # The tarball's top-level directory is go/; rename it per version
 - name: Extract Go {{ go_version }}
   ansible.builtin.shell: >
-    tar -xzf {{ ansible_env.HOME }}/.local/opt/downloads/go{{ go_version }}.tar.gz
-    -C {{ ansible_env.HOME }}/.local/opt
-    && mv {{ ansible_env.HOME }}/.local/opt/go {{ ansible_env.HOME }}/.local/opt/go-{{ go_version }}
+    tar -xzf {{ home_dir }}/.local/opt/downloads/go{{ go_version }}.tar.gz
+    -C {{ home_dir }}/.local/opt
+    && mv {{ home_dir }}/.local/opt/go {{ home_dir }}/.local/opt/go-{{ go_version }}
   args:
-    creates: "{{ ansible_env.HOME }}/.local/opt/go-{{ go_version }}/bin/go"
+    creates: "{{ home_dir }}/.local/opt/go-{{ go_version }}/bin/go"
   tags: go
 
 - name: Link go and gofmt into ~/.local/bin
   ansible.builtin.file:
-    src: "{{ ansible_env.HOME }}/.local/opt/go-{{ go_version }}/bin/{{ item }}"
-    dest: "{{ ansible_env.HOME }}/.local/bin/{{ item }}"
+    src: "{{ home_dir }}/.local/opt/go-{{ go_version }}/bin/{{ item }}"
+    dest: "{{ home_dir }}/.local/bin/{{ item }}"
     state: link
   loop: [go, gofmt]
   tags: go
 
 - name: Create versioned directories for uv and flyctl
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/.local/opt/{{ item }}"
+    path: "{{ home_dir }}/.local/opt/{{ item }}"
     state: directory
     mode: "0755"
   loop:
@@ -83,24 +83,24 @@
 - name: Download uv {{ uv_version }}
   ansible.builtin.get_url:
     url: "https://github.com/astral-sh/uv/releases/download/{{ uv_version }}/uv-x86_64-unknown-linux-gnu.tar.gz"
-    dest: "{{ ansible_env.HOME }}/.local/opt/downloads/uv-{{ uv_version }}.tar.gz"
+    dest: "{{ home_dir }}/.local/opt/downloads/uv-{{ uv_version }}.tar.gz"
     checksum: "sha256:{{ uv_sha256 }}"
     mode: "0644"
   tags: uv
 
 - name: Extract uv {{ uv_version }}
   ansible.builtin.unarchive:
-    src: "{{ ansible_env.HOME }}/.local/opt/downloads/uv-{{ uv_version }}.tar.gz"
-    dest: "{{ ansible_env.HOME }}/.local/opt/uv-{{ uv_version }}"
+    src: "{{ home_dir }}/.local/opt/downloads/uv-{{ uv_version }}.tar.gz"
+    dest: "{{ home_dir }}/.local/opt/uv-{{ uv_version }}"
     remote_src: true
     extra_opts: [--strip-components=1]
-    creates: "{{ ansible_env.HOME }}/.local/opt/uv-{{ uv_version }}/uv"
+    creates: "{{ home_dir }}/.local/opt/uv-{{ uv_version }}/uv"
   tags: uv
 
 - name: Link uv and uvx into ~/.local/bin
   ansible.builtin.file:
-    src: "{{ ansible_env.HOME }}/.local/opt/uv-{{ uv_version }}/{{ item }}"
-    dest: "{{ ansible_env.HOME }}/.local/bin/{{ item }}"
+    src: "{{ home_dir }}/.local/opt/uv-{{ uv_version }}/{{ item }}"
+    dest: "{{ home_dir }}/.local/bin/{{ item }}"
     state: link
   loop: [uv, uvx]
   tags: uv
@@ -108,23 +108,23 @@
 - name: Download flyctl {{ flyctl_version }}
   ansible.builtin.get_url:
     url: "https://github.com/superfly/flyctl/releases/download/v{{ flyctl_version }}/flyctl_{{ flyctl_version }}_Linux_x86_64.tar.gz"
-    dest: "{{ ansible_env.HOME }}/.local/opt/downloads/flyctl-{{ flyctl_version }}.tar.gz"
+    dest: "{{ home_dir }}/.local/opt/downloads/flyctl-{{ flyctl_version }}.tar.gz"
     checksum: "sha256:{{ flyctl_sha256 }}"
     mode: "0644"
   tags: flyctl
 
 - name: Extract flyctl {{ flyctl_version }}
   ansible.builtin.unarchive:
-    src: "{{ ansible_env.HOME }}/.local/opt/downloads/flyctl-{{ flyctl_version }}.tar.gz"
-    dest: "{{ ansible_env.HOME }}/.local/opt/flyctl-{{ flyctl_version }}"
+    src: "{{ home_dir }}/.local/opt/downloads/flyctl-{{ flyctl_version }}.tar.gz"
+    dest: "{{ home_dir }}/.local/opt/flyctl-{{ flyctl_version }}"
     remote_src: true
-    creates: "{{ ansible_env.HOME }}/.local/opt/flyctl-{{ flyctl_version }}/flyctl"
+    creates: "{{ home_dir }}/.local/opt/flyctl-{{ flyctl_version }}/flyctl"
   tags: flyctl
 
 - name: Link flyctl (and its `fly` alias) into ~/.local/bin
   ansible.builtin.file:
-    src: "{{ ansible_env.HOME }}/.local/opt/flyctl-{{ flyctl_version }}/flyctl"
-    dest: "{{ ansible_env.HOME }}/.local/bin/{{ item }}"
+    src: "{{ home_dir }}/.local/opt/flyctl-{{ flyctl_version }}/flyctl"
+    dest: "{{ home_dir }}/.local/bin/{{ item }}"
     state: link
   loop: [flyctl, fly]
   tags: flyctl
@@ -137,7 +137,7 @@
     global: true
   loop: "{{ npm_global_packages | dict2items }}"
   environment:
-    NPM_CONFIG_PREFIX: "{{ ansible_env.HOME }}/.local"
+    NPM_CONFIG_PREFIX: "{{ home_dir }}/.local"
   tags: npm
 
 - name: Install cargo packages
@@ -147,5 +147,5 @@
     locked: true
   loop: "{{ cargo_packages | dict2items }}"
   environment:
-    PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ home_dir }}/.cargo/bin:{{ ansible_facts['env']['PATH'] }}"
   tags: cargo

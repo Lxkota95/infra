@@ -63,7 +63,7 @@
 - name: Download Bitwarden {{ bitwarden_version }}
   ansible.builtin.get_url:
     url: "https://github.com/bitwarden/clients/releases/download/desktop-v{{ bitwarden_version }}/Bitwarden-{{ bitwarden_version }}-amd64.deb"
-    dest: "{{ ansible_env.HOME }}/.local/opt/downloads/Bitwarden-{{ bitwarden_version }}-amd64.deb"
+    dest: "{{ home_dir }}/.local/opt/downloads/Bitwarden-{{ bitwarden_version }}-amd64.deb"
     checksum: "sha256:{{ bitwarden_sha256 }}"
     mode: "0644"
   tags: bitwarden
@@ -71,14 +71,14 @@
 - name: Install Bitwarden {{ bitwarden_version }}
   become: true
   ansible.builtin.apt:
-    deb: "{{ ansible_env.HOME }}/.local/opt/downloads/Bitwarden-{{ bitwarden_version }}-amd64.deb"
+    deb: "{{ home_dir }}/.local/opt/downloads/Bitwarden-{{ bitwarden_version }}-amd64.deb"
   tags: bitwarden
 
 # Bitwarden must be running for git over SSH (it is the SSH agent). Same file Bitwarden writes for
 # Settings → "Start automatically on login"; a copy, not a stow link, since the app rewrites it.
 - name: Start Bitwarden at login
   ansible.builtin.copy:
-    dest: "{{ ansible_env.HOME }}/.config/autostart/bitwarden.desktop"
+    dest: "{{ home_dir }}/.config/autostart/bitwarden.desktop"
     mode: "0664"
     content: |
       [Desktop Entry]
@@ -127,7 +127,7 @@
 - name: Download Discord {{ discord_version }}
   ansible.builtin.get_url:
     url: "https://dl.discordapp.net/apps/linux/{{ discord_version }}/discord-{{ discord_version }}.deb"
-    dest: "{{ ansible_env.HOME }}/.local/opt/downloads/discord-{{ discord_version }}.deb"
+    dest: "{{ home_dir }}/.local/opt/downloads/discord-{{ discord_version }}.deb"
     checksum: "sha256:{{ discord_sha256 }}"
     mode: "0644"
   tags: discord
@@ -135,7 +135,7 @@
 - name: Install Discord {{ discord_version }}
   become: true
   ansible.builtin.apt:
-    deb: "{{ ansible_env.HOME }}/.local/opt/downloads/discord-{{ discord_version }}.deb"
+    deb: "{{ home_dir }}/.local/opt/downloads/discord-{{ discord_version }}.deb"
   tags: discord
 
 - name: Read default web browser

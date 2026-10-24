@@ -3,7 +3,7 @@
 # Not listed: lxkota (cloned by bootstrap.sh), archived repos, and covid_19 / dsa / learning_rust
 # (kept on GitHub, not needed locally yet).
 repos_owner: Lxkota95
-repos_dir: "{{ ansible_env.HOME }}/repos"
+repos_dir: "{{ home_dir }}/repos"
 repos_clone:
   - ansible
   - creamer
