@@ -5,6 +5,8 @@
   hosts: workstation
   vars:
     repo_dir: "{{ playbook_dir | dirname }}"
+    # The user's home directory; facts are only read via ansible_facts (see ansible.cfg)
+    home_dir: "{{ ansible_facts['env']['HOME'] }}"
   roles:
     - base
     - cli

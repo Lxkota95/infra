@@ -16,6 +16,6 @@
 # For log_path in ansible.cfg (Ansible doesn't create the directory itself)
 - name: Create Ansible log directory
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/.local/state/ansible"
+    path: "{{ home_dir }}/.local/state/ansible"
     state: directory
     mode: "0700"
