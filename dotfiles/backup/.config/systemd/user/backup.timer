@@ -1,0 +1,10 @@
+[Unit]
+Description=Hourly check: back up once a day when the USB stick is plugged in
+
+[Timer]
+OnCalendar=hourly
+RandomizedDelaySec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,6 +1,7 @@
 ---
 # Stow packages under dotfiles/ to link into $HOME
 dotfiles_packages:
+  - backup
   - bash
   - containers
   - ghostty
