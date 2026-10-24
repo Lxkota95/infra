@@ -11,6 +11,8 @@
     - editor
     - toolchains
     - apps
+    - security
     - dotfiles
+    - backup
     - desktop
     - repos

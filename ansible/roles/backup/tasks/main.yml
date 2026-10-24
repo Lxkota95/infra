@@ -1,0 +1,20 @@
+---
+# restic backups to the USB stick. The script and units are in the `backup` stow package;
+# the repository password is in the GNOME keyring (secret-tool) and in Bitwarden.
+- name: Install restic and secret-tool
+  become: true
+  ansible.builtin.apt:
+    name:
+      - libsecret-tools
+      - restic
+    state: present
+
+# Runs after the dotfiles role, which links backup.service/backup.timer into ~/.config/systemd/user
+- name: Enable the hourly backup timer
+  ansible.builtin.systemd_service:
+    name: backup.timer
+    scope: user
+    enabled: true
+    state: started
+    daemon_reload: true
+  tags: backup

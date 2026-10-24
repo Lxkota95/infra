@@ -1,0 +1,21 @@
+---
+- name: Install unattended-upgrades
+  become: true
+  ansible.builtin.apt:
+    name: unattended-upgrades
+    state: present
+
+# Lists in apt config files merge, so this adds to Ubuntu's Allowed-Origins without editing its file
+- name: Also auto-update vendor repos
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/51unattended-upgrades-vendors
+    mode: "0644"
+    content: |
+      // Managed by Ansible (security role). Adds vendor repos to Ubuntu's security-only defaults.
+      Unattended-Upgrade::Origins-Pattern {
+      {% for site in unattended_upgrades_sites %}
+          "site={{ site }}";
+      {% endfor %}
+      };
+  tags: unattended-upgrades
