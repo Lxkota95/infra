@@ -6,6 +6,7 @@ repos_owner: Lxkota95
 repos_dir: "{{ home_dir }}/repos"
 repos_clone:
   - ansible
+  - clanker
   - creamer
   - discord_bot
   - infra
