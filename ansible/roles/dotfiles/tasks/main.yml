@@ -1,0 +1,23 @@
+---
+- name: Check for unmanaged files that would conflict with stow
+  ansible.builtin.stat:
+    path: "{{ home_dir }}/{{ item }}"
+  loop: "{{ dotfiles_conflicts }}"
+  register: conflicts
+
+- name: Move conflicting files aside
+  ansible.builtin.command:
+    cmd: mv "{{ item.stat.path }}" "{{ item.stat.path }}.pre-stow"
+    creates: "{{ item.stat.path }}.pre-stow"
+  loop: "{{ conflicts.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: item.stat.exists and not item.stat.islnk
+
+- name: Stow dotfile packages
+  ansible.builtin.command:
+    cmd: stow -v {{ item }}
+    chdir: "{{ repo_dir }}/dotfiles"
+  loop: "{{ dotfiles_packages }}"
+  register: stow_result
+  changed_when: "'LINK:' in stow_result.stderr"

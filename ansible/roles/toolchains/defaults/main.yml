@@ -1,0 +1,35 @@
+---
+# One global version of each toolchain, from official sources (no version manager).
+# Release binaries are pinned with the sha256 their publishers provide.
+toolchains_packages:
+  - nodejs
+  - npm
+  - podman
+  - podman-docker
+  - rustup
+  - valgrind
+
+# Rust: Ubuntu's rustup package, which installs the official toolchains into ~/.rustup
+rust_toolchain: stable
+rust_components:
+  - rust-analyzer
+
+# Go from go.dev (sha256 from https://go.dev/dl/?mode=json)
+go_version: "1.27.3"
+go_sha256: 65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40
+
+# uv from GitHub releases (sha256 from the .sha256 release asset)
+uv_version: "0.13.5"
+uv_sha256: f68d291c75783122dad58ab77def0e13f3233f358731db5d6d7e8715603b928f
+
+# flyctl from GitHub releases (sha256 from the checksums.txt release asset)
+flyctl_version: "0.4.121"
+flyctl_sha256: cb17b6baddaf70791c47579cde416ef033caa991d63d8f4c7dc46c74f268d72f
+
+# Global npm packages (installed under ~/.local via the npm stow package's .npmrc)
+npm_global_packages:
+  markdownlint-cli: "0.49.1"
+
+# cargo install, into ~/.cargo/bin
+cargo_packages:
+  mcat: "0.6.5"

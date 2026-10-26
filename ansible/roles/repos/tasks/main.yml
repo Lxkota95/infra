@@ -1,0 +1,17 @@
+---
+- name: Create ~/repos
+  ansible.builtin.file:
+    path: "{{ repos_dir }}"
+    state: directory
+    mode: "0755"
+  tags: repos
+
+# SSH via the Bitwarden agent (SSH_AUTH_SOCK from the calling shell); update: false leaves
+# existing clones and any local work alone
+- name: Clone repos
+  ansible.builtin.git:
+    repo: "git@github.com:{{ repos_owner }}/{{ item }}.git"
+    dest: "{{ repos_dir }}/{{ item }}"
+    update: false
+  loop: "{{ repos_clone }}"
+  tags: repos

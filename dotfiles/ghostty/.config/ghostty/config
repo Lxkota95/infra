@@ -1,0 +1,11 @@
+# Ghostty config — see `ghostty +show-config --default --docs` for all options
+
+font-family = JetBrainsMono Nerd Font
+font-size = 12
+
+# When ssh-ing, install Ghostty's terminfo on the remote host (or fall back to
+# TERM=xterm-256color) so remote tools don't complain about an unknown terminal.
+shell-integration-features = ssh-terminfo,ssh-env
+
+copy-on-select = clipboard
+confirm-close-surface = false

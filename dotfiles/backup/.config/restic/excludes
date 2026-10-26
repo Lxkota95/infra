@@ -1,0 +1,23 @@
+# Paths restic skips: anything re-downloadable or rebuilt by the playbook.
+# One pattern per line; see `restic help backup` (--exclude-file).
+$HOME/.cache
+$HOME/.local/share/Trash
+$HOME/snap
+# Toolchains and package caches
+$HOME/.rustup
+$HOME/.cargo/registry
+$HOME/.cargo/git
+$HOME/go/pkg
+$HOME/.npm
+# Pinned releases (~/.local/opt) and fonts are reinstalled by Ansible
+$HOME/.local/opt
+$HOME/.local/share/fonts
+# Neovim plugins and Mason tools are reinstalled on first launch
+$HOME/.local/share/nvim
+# Container images and layers
+$HOME/.local/share/containers
+# Claude Code's downloaded versions (config and memory in ~/.claude are kept)
+$HOME/.local/share/claude
+# Firefox caches inside the profile
+$HOME/.mozilla/firefox/*/cache2
+$HOME/.mozilla/firefox/*/storage/temporary

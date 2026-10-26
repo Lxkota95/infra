@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Back up $HOME with restic to the USB stick (installer stick, folder restic-lxkota-f13p).
+#   backup            run now (if the stick is plugged in)
+#   backup --auto     used by backup.timer: also skips if the last backup is under 20 hours old
+#   backup --check    verify the repository (reads a 5% sample of the data)
+#   backup snapshots  any other args are passed to restic, e.g. `backup restore latest --target /tmp/r`
+# The repository password lives in the GNOME keyring (and in Bitwarden for recovery):
+#   secret-tool store --label='restic USB backup' service restic repo lxkota-f13p-usb
+set -euo pipefail
+
+export RESTIC_REPOSITORY="/run/media/$USER/UBUNTU-26_0/restic-lxkota-f13p"
+export RESTIC_PASSWORD_COMMAND="secret-tool lookup service restic repo lxkota-f13p-usb"
+stamp="${XDG_STATE_HOME:-$HOME/.local/state}/backup/last-success"
+excludes="$HOME/.config/restic/excludes"
+
+notify() { command -v notify-send >/dev/null && notify-send --app-name=backup "$@" || true; }
+
+if [ ! -f "$RESTIC_REPOSITORY/config" ]; then
+    [ "${1:-}" = --auto ] && exit 0 # stick not plugged in: nothing to do
+    echo "backup: repository not found at $RESTIC_REPOSITORY (is the USB stick plugged in?)" >&2
+    exit 1
+fi
+
+case "${1:-}" in
+"" | --auto) ;;
+--check) exec restic check --read-data-subset=5% ;;
+*) exec restic "$@" ;;
+esac
+
+if [ "${1:-}" = --auto ] && [ -f "$stamp" ] && [ -n "$(find "$stamp" -mmin -1200)" ]; then
+    exit 0 # backed up within the last 20 hours
+fi
+
+trap 'notify --urgency=critical "Backup failed" "See: journalctl --user -u backup"' ERR
+
+restic backup "$HOME" --exclude-file="$excludes" --exclude-caches --one-file-system --tag auto
+restic forget --keep-daily 7 --keep-weekly 4 --keep-monthly 12 --prune
+
+mkdir -p "$(dirname "$stamp")" && touch "$stamp"
