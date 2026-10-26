@@ -1,0 +1,9 @@
+[Unit]
+Description=restic backup of the home folder to the USB stick
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/backup --auto
+# Run quietly in the background
+Nice=10
+IOSchedulingClass=idle

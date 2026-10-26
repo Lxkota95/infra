@@ -1,0 +1,66 @@
+---
+- name: Install editor build dependencies
+  become: true
+  ansible.builtin.apt:
+    name: "{{ editor_packages }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Create version directories under ~/.local/opt
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.local/opt/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "tree-sitter-{{ tree_sitter_version }}"
+    - downloads
+  tags: neovim
+
+- name: Download Neovim {{ neovim_version }}
+  ansible.builtin.get_url:
+    url: "https://github.com/neovim/neovim/releases/download/{{ neovim_version }}/nvim-linux-x86_64.tar.gz"
+    dest: "{{ home_dir }}/.local/opt/downloads/nvim-{{ neovim_version }}.tar.gz"
+    checksum: "sha256:{{ neovim_sha256 }}"
+    mode: "0644"
+  tags: neovim
+
+# The tarball's top-level directory is nvim-linux-x86_64; rename it per version
+- name: Extract Neovim {{ neovim_version }}
+  ansible.builtin.shell: >
+    tar -xzf {{ home_dir }}/.local/opt/downloads/nvim-{{ neovim_version }}.tar.gz
+    -C {{ home_dir }}/.local/opt
+    && mv {{ home_dir }}/.local/opt/nvim-linux-x86_64 {{ home_dir }}/.local/opt/nvim-{{ neovim_version }}
+  args:
+    creates: "{{ home_dir }}/.local/opt/nvim-{{ neovim_version }}/bin/nvim"
+  tags: neovim
+
+- name: Link nvim into ~/.local/bin
+  ansible.builtin.file:
+    src: "{{ home_dir }}/.local/opt/nvim-{{ neovim_version }}/bin/nvim"
+    dest: "{{ home_dir }}/.local/bin/nvim"
+    state: link
+  tags: neovim
+
+- name: Download tree-sitter CLI {{ tree_sitter_version }}
+  ansible.builtin.get_url:
+    url: "https://github.com/tree-sitter/tree-sitter/releases/download/{{ tree_sitter_version }}/tree-sitter-cli-linux-x64.zip"
+    dest: "{{ home_dir }}/.local/opt/downloads/tree-sitter-{{ tree_sitter_version }}.zip"
+    checksum: "sha256:{{ tree_sitter_sha256 }}"
+    mode: "0644"
+  tags: neovim
+
+- name: Extract tree-sitter CLI {{ tree_sitter_version }}
+  ansible.builtin.unarchive:
+    src: "{{ home_dir }}/.local/opt/downloads/tree-sitter-{{ tree_sitter_version }}.zip"
+    dest: "{{ home_dir }}/.local/opt/tree-sitter-{{ tree_sitter_version }}"
+    remote_src: true
+    creates: "{{ home_dir }}/.local/opt/tree-sitter-{{ tree_sitter_version }}/tree-sitter"
+  tags: neovim
+
+- name: Link tree-sitter into ~/.local/bin
+  ansible.builtin.file:
+    src: "{{ home_dir }}/.local/opt/tree-sitter-{{ tree_sitter_version }}/tree-sitter"
+    dest: "{{ home_dir }}/.local/bin/tree-sitter"
+    state: link
+  tags: neovim

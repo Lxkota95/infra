@@ -1,0 +1,14 @@
+---
+# GitHub repos (owner Lxkota95) cloned to ~/repos/<name>. Existing clones are never updated.
+# Not listed: infra (this repo, cloned by bootstrap.sh), archived repos, and covid_19 / dsa /
+# learning_rust (kept on GitHub, not needed locally yet). lxkota is the private planning-notes repo.
+repos_owner: Lxkota95
+repos_dir: "{{ home_dir }}/repos"
+repos_clone:
+  - ansible
+  - clanker
+  - creamer
+  - discord_bot
+  - lxkota
+  - odst
+  - website

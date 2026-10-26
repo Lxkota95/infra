@@ -1,0 +1,21 @@
+---
+- name: Install base packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ansible
+      - curl
+      - gh
+      - git
+      - stow
+      - tree
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+# For log_path in ansible.cfg (Ansible doesn't create the directory itself)
+- name: Create Ansible log directory
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.local/state/ansible"
+    state: directory
+    mode: "0700"

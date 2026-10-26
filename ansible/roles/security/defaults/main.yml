@@ -1,0 +1,6 @@
+---
+# Vendor apt repos whose updates unattended-upgrades installs automatically (matched by hostname,
+# since their origin labels are opaque). Ubuntu's own security origins stay in 50unattended-upgrades.
+unattended_upgrades_sites:
+  - packages.mozilla.org # Firefox
+  - updates.signal.org # Signal
