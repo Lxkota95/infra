@@ -4,8 +4,8 @@
 # Cloning over SSH requires GitHub access first (Bitwarden SSH agent + key on GitHub).
 set -euo pipefail
 
-REPO_URL="${REPO_URL:-git@github.com:Lxkota95/lxkota.git}"
-REPO_DIR="${REPO_DIR:-$HOME/repos/lxkota}"
+REPO_URL="${REPO_URL:-git@github.com:Lxkota95/infra.git}"
+REPO_DIR="${REPO_DIR:-$HOME/repos/infra}"
 
 sudo apt-get update
 sudo apt-get install -y git ansible

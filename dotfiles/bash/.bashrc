@@ -1,5 +1,5 @@
 # ~/.bashrc: executed by bash(1) for interactive non-login shells.
-# Managed by stow from ~/repos/lxkota/dotfiles/bash. Tool-specific setup lives
+# Managed by stow from ~/repos/infra/dotfiles/bash. Tool-specific setup lives
 # in ~/.bashrc.d/*.sh; each file must be safe to source when its tool is absent.
 
 # If not running interactively, don't do anything
