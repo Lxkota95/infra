@@ -7,3 +7,6 @@
 	rebase = true
 [push]
 	autoSetupRemote = true
+[fetch]
+	# Drop local references to remote branches deleted on GitHub (e.g. auto-deleted after a PR merge)
+	prune = true
