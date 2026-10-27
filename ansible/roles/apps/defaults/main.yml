@@ -18,6 +18,11 @@ bitwarden_sha256: fcabfc7da3c327e2625b105e951cee4e60703bb8e256f0aac9cc9bc83ec706
 discord_version: "1.0.166"
 discord_sha256: fde0bd83d718cd5b9cf949695fb461ae8004da2f3779c429b346dc0659d7de6e
 
+# Obsidian: markdown notes/reader, official .deb (no apt repo). Obsidian updates its app code itself;
+# bump these to upgrade the installer/Electron. sha256 matches the GitHub release asset's digest.
+obsidian_version: "1.14.5"
+obsidian_sha256: c37fb46a966f604823337fb36ab23bd1baf8ce912ec35af59d62358a93357bee
+
 # Snaps replaced by the apt packages above. Removed only after their data is migrated:
 # on a machine that still has them, apply with --skip-tags remove-snaps first.
 apps_removed_snaps:

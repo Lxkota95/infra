@@ -1,0 +1,4 @@
+# Global gitignore (git reads ~/.config/git/ignore by default)
+
+# Obsidian vault settings, created when a repo folder is opened as a vault
+.obsidian/
