@@ -2,6 +2,9 @@
 # One global version of each toolchain, from official sources (no version manager).
 # Release binaries are pinned with the sha256 their publishers provide.
 toolchains_packages:
+  # man pages for system calls and POSIX (offline reference for the learning track: `man 2 fork`)
+  - manpages-dev
+  - manpages-posix-dev
   - nodejs
   - npm
   - podman
