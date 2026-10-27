@@ -8,7 +8,6 @@ repos_clone:
   - ansible
   - clanker
   - creamer
-  - discord_bot
   - lxkota
   - odst
   - website
