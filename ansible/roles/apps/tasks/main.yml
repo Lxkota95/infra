@@ -138,6 +138,20 @@
     deb: "{{ home_dir }}/.local/opt/downloads/discord-{{ discord_version }}.deb"
   tags: discord
 
+- name: Download Obsidian {{ obsidian_version }}
+  ansible.builtin.get_url:
+    url: "https://github.com/obsidianmd/obsidian-releases/releases/download/v{{ obsidian_version }}/obsidian_{{ obsidian_version }}_amd64.deb"
+    dest: "{{ home_dir }}/.local/opt/downloads/obsidian_{{ obsidian_version }}_amd64.deb"
+    checksum: "sha256:{{ obsidian_sha256 }}"
+    mode: "0644"
+  tags: obsidian
+
+- name: Install Obsidian {{ obsidian_version }}
+  become: true
+  ansible.builtin.apt:
+    deb: "{{ home_dir }}/.local/opt/downloads/obsidian_{{ obsidian_version }}_amd64.deb"
+  tags: obsidian
+
 - name: Read default web browser
   ansible.builtin.command: xdg-settings get default-web-browser
   register: default_browser
