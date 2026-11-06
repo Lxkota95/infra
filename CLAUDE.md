@@ -8,7 +8,7 @@ Reproducible setup for the user's Ubuntu workstation and future lab machines. Pu
 - `dotfiles/` — stow packages, linked into `$HOME` by the `dotfiles` role (`.stowrc`: `--no-folding`).
 - `homelab/` — the original Pi playbook; not yet part of `ansible/`.
 - Planning notes, decisions and session logs live in the private `lxkota` repo
-  (`~/repos/lxkota/docs/`: `roadmap.md` for open work, `work/` for decisions and session logs);
+  (`~/repos/lxkota/planning/`: `roadmap.md` for open work, `decisions.md`, `sessions/`);
   update them as work completes.
 
 Conventions:
