@@ -75,7 +75,9 @@
   tags: bitwarden
 
 # Bitwarden must be running for git over SSH (it is the SSH agent). Same file Bitwarden writes for
-# Settings → "Start automatically on login"; a copy, not a stow link, since the app rewrites it.
+# Settings → "Start automatically on login" (a copy, not a stow link, since the app rewrites it), except
+# Exec runs the /opt/Bitwarden/bitwarden wrapper: the app writes bitwarden-app, which escapes the
+# AppArmor profile that grants it user namespaces, so Chromium's sandbox aborts at login.
 - name: Start Bitwarden at login
   ansible.builtin.copy:
     dest: "{{ home_dir }}/.config/autostart/bitwarden.desktop"
@@ -85,7 +87,7 @@
       Type=Application
       Name=Bitwarden
       Comment=Bitwarden startup script
-      Exec=/opt/Bitwarden/bitwarden-app --autostart
+      Exec=/opt/Bitwarden/bitwarden --autostart
       StartupNotify=false
       Terminal=false
   tags: [bitwarden, autostart]
